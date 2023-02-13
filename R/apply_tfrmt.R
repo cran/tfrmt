@@ -73,7 +73,8 @@ apply_tfrmt <- function(.data, tfrmt, mock = FALSE){
       fail_desc = "Unable to apply row group structure"
     ) %>%
     #Select before grouping to not have to deal with if it indents or not
-    tentative_process(apply_col_plan, col_plan_vars, fail_desc = "Unable to subset dataset columns") %>%
+    tentative_process(apply_col_plan, col_plan_vars,
+                      fail_desc = "Unable to subset dataset columns") %>%
     tentative_process(apply_row_grp_lbl,
                       tfrmt$row_grp_plan$label_loc,
                       tfrmt$group,
@@ -309,7 +310,8 @@ pivot_wider_tfrmt <- function(data, tfrmt, mock){
     map_chr(as_name)
   tbl_dat_wide <- data %>%
     select(-!!tfrmt$param) %>%
-    mutate(across(all_of(column_cols), na_if, "")) %>%
+    mutate(across(all_of(column_cols), ~as.character(.x))) %>%
+    mutate(across(all_of(column_cols), ~na_if(.x, ""))) %>%
     quietly(pivot_wider)(
       names_from = c(starts_with(.tlang_struct_col_prefix), !!!tfrmt$column),
       names_sep = .tlang_delim,
@@ -318,7 +320,7 @@ pivot_wider_tfrmt <- function(data, tfrmt, mock){
       )
 
   if (mock == TRUE && length(tbl_dat_wide$warnings)>0 &&
-      str_detect(tbl_dat_wide$warnings, paste0("Values from `", as_label(tfrmt$value), "` are not uniquely identified"))){
+      any(str_detect(tbl_dat_wide$warnings, paste0("Values from `", as_label(tfrmt$value), "` are not uniquely identified")))){
     message("Mock data contains more than 1 param per unique label value. Param values will appear in separate rows.")
     tbl_dat_wide <- tbl_dat_wide$result %>%
       unnest(cols = everything()) %>%
@@ -335,7 +337,10 @@ pivot_wider_tfrmt <- function(data, tfrmt, mock){
 
 frmt_struct_string <- function(grp, lbl, param_vals){
   length_lbl <- str_count(lbl,",")+1
-  group_names <- substitute(grp) %>% map_chr(as_label) %>% .[-1]
+
+  group_names <- substitute(grp) %>%
+    as.list() %>%
+    map_chr(as_label) %>% .[-1]
   if(length(group_names) > 1){
     group_val_char <- capture.output(dput(setNames(grp, group_names)))
   }else if(length(group_names) == 1){

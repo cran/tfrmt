@@ -36,7 +36,6 @@
 #'           frmt("XXX")
 #'         )
 #'
-#' @importFrom tidyr expand_grid
 #' @returns frmt_structure object
 #' @export
 frmt_structure <- function(group_val = ".default", label_val = ".default", ...){
@@ -181,6 +180,7 @@ frmt_combine <- function(expression, ..., missing = NULL){
 
   n_vars <- str_count(expression, everything_but_curly)
   vars_to_fmt <- str_extract_all(expression, everything_but_curly, simplify = TRUE)
+  vars_to_fmt <- as.vector(vars_to_fmt)
   frmt_ls <- list(...)
 
   if(n_vars != length(frmt_ls) & length(frmt_ls) > 1){
