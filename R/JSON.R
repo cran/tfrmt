@@ -5,6 +5,13 @@
 #'
 #' @return JSON
 #' @export
+#' @examples
+#' tfrmt(
+#'   label = label,
+#'   column = column,
+#'   param = param,
+#'   value=value) %>%
+#'   tfrmt_to_json()
 #'
 #' @importFrom jsonlite toJSON validate
 tfrmt_to_json <- function(tfrmt, path = NULL){
@@ -116,6 +123,10 @@ as_json.frmt_structure <- function(x){
 
 #' @export
 as_json.frmt <- function(x){
+  if(!is.null(x$transform)){
+    x$transform <- deparse(x$transform) %>%
+      str_c(collapse = "")
+  }
   list(frmt = x)
 }
 
@@ -180,11 +191,15 @@ as_json.col_style_structure <- function(x){
 
 #' json to tfrmt
 #'
+#' Reader to read JSON files/objects into tfrmt objects
 #' @param path location of the json file to read in
 #'
-#' @param json by default this is null, if
+#' @param json json object to read in. By default this is null. This function
+#'   will read in json object preferentially. So if both a path and a json
+#'   object are supplied the json object will be read in.
 #'
 #' @importFrom jsonlite read_json parse_json
+#' @export
 json_to_tfrmt <- function(path = NULL, json = NULL){
   if(!is.null(json)){
     dirty_list <- parse_json(json)
@@ -264,7 +279,12 @@ ls_to_frmt <- function(x){
   x <- x %>%
     map(unlist)
 
-  do.call(frmt, list(expression = x$expression, missing = unlist(x$missing), scientific = x$scientific))
+  if(!is.null(x$transform)){
+    x$transform <- str2lang(x$transform)
+  }
+  do.call(frmt, list(expression = x$expression, missing = unlist(x$missing),
+                     scientific = x$scientific,
+                     transform = x$transform))
 }
 
 ls_to_frmt_combine <- function(x){
@@ -326,7 +346,7 @@ ls_to_footnote_plan <- function(ls){
   }
 }
 
-#' @importFrom rlang parse_expr
+#' @importFrom rlang parse_expr quo_get_expr
 ls_to_col_plan <- function(ls){
   if(!is.null(ls)){
     dots <- ls$col_plan$dots %>%
@@ -337,9 +357,12 @@ ls_to_col_plan <- function(ls){
             as.character() %>%
             parse_expr()
         } else{
+
           el[[1]] %>%
             str_replace_all("\\\"", "'") %>%
-            str2lang()
+            char_as_quo() %>%
+            quo_get_expr()
+
         }
       })
 
@@ -361,23 +384,23 @@ ls_to_span_structure <- function(ls){
 
 ls_to_col_style_plan <- function(ls){
   if(!is.null(ls)){
-     struct_ls <- ls %>% map(function(struct){
-       stuct_in <- struct %>% map(unlist)
-       names(stuct_in) <- names(stuct_in) %>% str_replace("cols", "col")
-       cols_val <- struct[["cols"]][[1]]
-       if(!is.null(names(cols_val)) && names(cols_val) == "span_structure"){
-         stuct_in[["col"]] <-  cols_val[[1]] %>%
-         ls_to_span_structure() %>%
-           as.character() %>%
-           parse_expr()
-       } else {
-         stuct_in[["col"]] <- parse_expr(
-           paste0("vars(", str_c(stuct_in[["col"]], collapse = ", "), ")"))
-       }
-       do.call(col_style_structure, stuct_in)
-       })
+    struct_ls <- ls %>% map(function(struct){
+      stuct_in <- struct %>% map(unlist)
+      names(stuct_in) <- names(stuct_in) %>% str_replace("cols", "col")
+      cols_val <- struct[["cols"]][[1]]
+      if(!is.null(names(cols_val)) && names(cols_val) == "span_structure"){
+        stuct_in[["col"]] <-  cols_val[[1]] %>%
+          ls_to_span_structure() %>%
+          as.character() %>%
+          parse_expr()
+      } else {
+        stuct_in[["col"]] <- parse_expr(
+          paste0("vars(", str_c(stuct_in[["col"]], collapse = ", "), ")"))
+      }
+      do.call(col_style_structure, stuct_in)
+    })
 
-     do.call(col_style_plan, struct_ls)
+    do.call(col_style_plan, struct_ls)
   }
 }
 simplify_group_val <- function(group_ls){

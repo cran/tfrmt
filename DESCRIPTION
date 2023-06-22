@@ -1,6 +1,6 @@
 Package: tfrmt
 Title: Applies Display Metadata to Analysis Results Datasets
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     c(person(given = "Christina",
              family = "Fillmore",
@@ -46,7 +46,7 @@ URL: https://GSK-Biostatistics.github.io/tfrmt/,
 BugReports: https://github.com/GSK-Biostatistics/tfrmt/issues
 Depends: R (>= 2.10)
 NeedsCompilation: no
-Packaged: 2023-02-13 19:54:07 UTC; christinafillmore
+Packaged: 2023-06-22 15:41:30 UTC; christinafillmore
 Author: Christina Fillmore [aut, cre] (<https://orcid.org/0000-0003-0595-2302>),
   GlaxoSmithKline Research & Development Limited [cph, fnd],
   Atorus Research LLC [cph, fnd],
@@ -56,4 +56,4 @@ Author: Christina Fillmore [aut, cre] (<https://orcid.org/0000-0003-0595-2302>),
   Shannon Haughton [aut]
 Maintainer: Christina Fillmore <christina.e.fillmore@gsk.com>
 Repository: CRAN
-Date/Publication: 2023-02-13 20:40:02 UTC
+Date/Publication: 2023-06-22 16:02:35 UTC
