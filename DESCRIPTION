@@ -1,12 +1,16 @@
 Package: tfrmt
 Title: Applies Display Metadata to Analysis Results Datasets
-Version: 0.0.3
+Version: 0.1.0
 Authors@R: 
-    c(person(given = "Christina",
-             family = "Fillmore",
+    c(person(given = "Becca",
+             family = "Krouse",
              role = c("aut", "cre"),
-             email = "christina.e.fillmore@gsk.com",
-             comment = c(ORCID = "0000-0003-0595-2302")),
+             email = "becca.z.krouse@gsk.com"),
+             person(given = "Christina",
+                    family = "Fillmore",
+                    role = c("aut"),
+                    email = "christina.e.fillmore@gsk.com",
+                    comment = c(ORCID = "0000-0003-0595-2302")),
              person("GlaxoSmithKline Research & Development Limited", role = c("cph", "fnd")),
              person("Atorus Research LLC", role = c("cph", "fnd")),
              person(given = "Ellis",
@@ -14,10 +18,6 @@ Authors@R:
                     role = c("aut"),
                     email = "ellis.h.hughes@gsk.com",
                     comment = c(ORCID = "0000-0003-0637-4436")),
-             person(given = "Becca",
-                    family = "Krouse",
-                    role = c("aut"),
-                    email = "becca.z.krouse@gsk.com"),
              person(given = "Karima",
                     family = "Ahmad",
                     role = c("aut"),
@@ -39,21 +39,21 @@ RoxygenNote: 7.2.3
 Suggests: covr, testthat (>= 3.0.0), knitr, rmarkdown, patchwork,
         survival, ggfortify
 Imports: magrittr, dplyr, purrr, rlang, stringr, stringi, tidyr, gt (>=
-        0.6.0), tidyselect, forcats, tibble, ggplot2, jsonlite
+        0.6.0), tidyselect, forcats, tibble, ggplot2, jsonlite, glue
 Config/testthat/edition: 3
 URL: https://GSK-Biostatistics.github.io/tfrmt/,
-        https://gsk-biostatistics.github.io/tfrmt/
+        https://github.com/GSK-Biostatistics/tfrmt
 BugReports: https://github.com/GSK-Biostatistics/tfrmt/issues
 Depends: R (>= 2.10)
 NeedsCompilation: no
-Packaged: 2023-06-22 15:41:30 UTC; christinafillmore
-Author: Christina Fillmore [aut, cre] (<https://orcid.org/0000-0003-0595-2302>),
+Packaged: 2023-10-17 13:24:57 UTC; bzk67899
+Author: Becca Krouse [aut, cre],
+  Christina Fillmore [aut] (<https://orcid.org/0000-0003-0595-2302>),
   GlaxoSmithKline Research & Development Limited [cph, fnd],
   Atorus Research LLC [cph, fnd],
   Ellis Hughes [aut] (<https://orcid.org/0000-0003-0637-4436>),
-  Becca Krouse [aut],
   Karima Ahmad [aut] (<https://orcid.org/0000-0002-8784-1712>),
   Shannon Haughton [aut]
-Maintainer: Christina Fillmore <christina.e.fillmore@gsk.com>
+Maintainer: Becca Krouse <becca.z.krouse@gsk.com>
 Repository: CRAN
-Date/Publication: 2023-06-22 16:02:35 UTC
+Date/Publication: 2023-10-17 22:40:06 UTC

@@ -45,9 +45,10 @@ apply_row_grp_struct <- function(.data, row_grp_struct_list, group, label = NULL
   dat_max_widths <- .data %>%
     summarise(across(everything(), function(x) {
       if (is.character(x)) {
-        max(sapply(str_split(x, "\\n"), function(y) {
-          max(nchar(y), na.rm = TRUE)
-        }), na.rm = TRUE)
+        str_split(x, "\\n") %>%
+          unlist() %>%
+          nchar() %>%
+          max(na.rm = TRUE)
       } else{
         max(nchar(x), na.rm = TRUE)
       }
@@ -306,7 +307,6 @@ remove_grp_cols <- function(.data, element_row_grp_loc, group, label = NULL){
     group <- as_vars(grps_avail)
 
     # Either drop group columns ("no print"), or format them w/ label
-
     if (element_row_grp_loc$location=="noprint"){
 
       add_ln_df <- .data %>% select(-c(!!!group))
@@ -319,8 +319,8 @@ remove_grp_cols <- function(.data, element_row_grp_loc, group, label = NULL){
         group_by(!!group[[1]])
     } else { # Using the grouping in gt, but needs to drop all groups in label
       add_ln_df <- .data %>%
-        group_by(!!group[[1]]) %>%
-        select(-c(!!!group[-1]))
+        select(-c(!!!group[-1])) %>%
+        group_by(!!group[[1]])
     }
   }
   add_ln_df

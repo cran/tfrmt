@@ -22,6 +22,7 @@
 #' @param sorting_cols which columns determine sorting of output
 #' @param big_n how to format subject totals ("big Ns") for inclusion in the column labels. Takes a [big_n_structure()]
 #' @param footnote_plan footnotes to be added to the table. Takes a [footnote_plan()]
+#' @param page_plan pagination splits to be applied to the table. Takes a [page_plan()]
 #' @param ... These dots are for future extensions and must be empty.
 #'
 #' @return tfrmt object
@@ -95,7 +96,7 @@
 #'   ),
 #' # Specify column styling plan
 #'   col_style_plan = col_style_plan(
-#'     col_style_structure(align = c(".",","," "), col = vars(everything()))
+#'     col_style_structure(col = vars(everything()), align = c(".",","," "))
 #'   ))
 #'
 #' tfrmt_spec <- tfrmt(
@@ -154,7 +155,7 @@
 #'                       -starts_with("ord") ),
 #'   # Specify column styling plan
 #'   col_style_plan = col_style_plan(
-#'     col_style_structure(align = c(".",","," "), col = vars(everything()))
+#'     col_style_structure(col = vars(everything()), align = c(".",","," "))
 #'   ),
 #'
 #'   # Specify row group plan
@@ -185,6 +186,7 @@ tfrmt <- function(
   sorting_cols,
   big_n,
   footnote_plan,
+  page_plan,
   ...
 ){
 
