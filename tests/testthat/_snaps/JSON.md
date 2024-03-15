@@ -56,14 +56,14 @@
               "group_val": ["A", "C"],
               "block_to_apply": {
                 "post_space": ["---"],
-                "border": ["outline", "bottom"]
+                "fill": [true]
               }
             },
             {
               "group_val": ["B"],
               "block_to_apply": {
                 "post_space": [" "],
-                "border": ["outline", "bottom"]
+                "fill": [true]
               }
             }
           ],
@@ -94,7 +94,7 @@
               },
               "block_to_apply": {
                 "post_space": [" "],
-                "border": ["outline", "bottom"]
+                "fill": [true]
               }
             }
           ],
@@ -320,7 +320,7 @@
                   }
                 }
               },
-              "missing": {}
+              "missing": [""]
             }
           },
           {
@@ -329,7 +329,7 @@
             "param_val": ["foo"],
             "frmt": {
               "expression": ["xx.x"],
-              "missing": {},
+              "missing": ["--"],
               "scientific": {},
               "transform": {}
             }
@@ -343,7 +343,7 @@
                 ">0.4": {
                   "frmt": {
                     "expression": ["(X.X%)"],
-                    "missing": {},
+                    "missing": [""],
                     "scientific": {},
                     "transform": {}
                   }

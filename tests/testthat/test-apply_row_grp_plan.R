@@ -85,6 +85,30 @@ test_that("insert post space - two grouping variables",{
       "C",  "b",   " ", " " ," ", " ",
     ))
 
+  # grouping var not referenced - assumed NULL
+  sample_grp_plan <- row_grp_plan(
+    row_grp_structure(group_val = list(grp1 = "A"), element_block(post_space = " ")),
+    label_loc = element_row_grp_loc(location = "spanning")
+  )
+
+   expect_equal(
+     apply_row_grp_struct(df, sample_grp_plan$struct_list, vars(grp1, grp2), label = sym("label")),
+     tibble::tribble(
+       ~grp1, ~grp2, ~label,   ~trtA,       ~trtB,     ~trtC,
+       "A",  "a",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "A",  "a",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "A",  "b",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "A",  "b",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "A",  "b",   " ", " " ," ", " ",
+       "B",  "a",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "B",  "a",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "B",  "b",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "B",  "b",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "C",  "a",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "C",  "a",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "C",  "b",   "1", "xx (xx%)" ,"xx (xx%)", "xx (xx%)",
+       "C",  "b",   "2", "xx (xx%)" ,"xx (xx%)", "xx (xx%)"
+     ))
 })
 
 
@@ -246,6 +270,35 @@ test_that("post space is truncated to data width",{
       "C",  "--------", "--------",  "--------",
       "D",  "xx (xx%)", "xx (xx%)",  "xx (xx%)",
       "D",  "--------", "--------",  "--------"))
+})
+
+
+test_that("do not recycle the post space for full width",{
+
+  df <- tibble(
+    grp1 = c("A","B","C","D"),
+    trtA = rep("xx (xx%)", 4),
+    trtB = rep("xx (xx%)", 4),
+    trtC = rep("xx (xx%)", 4),
+  )
+
+  sample_grp_plan <- row_grp_plan(
+    row_grp_structure(group_val = ".default", element_block(post_space ="--", fill = FALSE)),
+    label_loc =element_row_grp_loc(location = "spanning")
+  )
+
+  expect_equal(
+    apply_row_grp_struct(df, sample_grp_plan$struct_list, vars(grp1)),
+    tibble::tribble(
+      ~grp1, ~trtA,      ~trtB,      ~trtC,
+      "A",  "xx (xx%)", "xx (xx%)",  "xx (xx%)",
+      "A",  "--"      , "--"      ,  "--"      ,
+      "B",  "xx (xx%)", "xx (xx%)",  "xx (xx%)",
+      "B",  "--"      , "--"      ,  "--"      ,
+      "C",  "xx (xx%)", "xx (xx%)",  "xx (xx%)",
+      "C",  "--"      , "--"      ,  "--"      ,
+      "D",  "xx (xx%)", "xx (xx%)",  "xx (xx%)",
+      "D",  "--"      , "--"      ,  "--"      ))
 })
 
 test_that("post space works when data contains NAs",{
@@ -902,3 +955,91 @@ test_that("Row group plan indenting handles factor variables", {
       remove_grp_cols(grp_plan$label_loc, vars(grp_span, grp)),
     expected)
 })
+
+
+test_that("Check row group plan in tfrmt - expect error when NA in label column",{
+
+  # create data
+  data_ae2 <- data_ae %>%
+    group_by(AEBODSYS, AETERM) %>%
+    mutate(pct_high = value[col2=="Xanomeline High Dose" & param=="pct"]) %>%
+    ungroup %>%
+    filter(pct_high >10) %>%
+    select(-pct_high)
+
+  data_ae2$AETERM <- ifelse(data_ae2$AETERM == "ANY BODY SYSTEM", NA, data_ae2$AETERM)
+
+
+  # expect error message
+  expect_message({
+    tfrmt(
+      group = AEBODSYS,
+      label = AETERM,
+      column = c(col2, col1),
+      param = param,
+      value = value,
+      sorting_cols = c(ord1, ord2),
+      body_plan = body_plan(
+        frmt_structure(group_val = ".default", label_val = ".default",
+                       frmt_combine("{n} {pct}",
+                                    n = frmt("XXX"),
+                                    pct = frmt_when(
+                                      "==100" ~ "",
+                                      "==0" ~ "",
+                                      TRUE ~ frmt("(xx.x %)")))),
+        frmt_structure(group_val = ".default", label_val = ".default",
+                       AEs = frmt("[XXX]")),
+        frmt_structure(group_val = ".default", label_val = ".default",
+                       pval = frmt_when(">0.99" ~ ">0.99",
+                                        "<0.001" ~ "<0.001",
+                                        "<0.05" ~ frmt("x.xxx*"),
+                                        TRUE ~ frmt("x.xxx", missing ="--")))
+      ),
+      col_plan = col_plan(
+        -starts_with("ord")
+      )) %>%
+      print_to_gt(., data_ae2) %>% tab_options(container.width = 1000)
+
+  },
+  paste("Unable to to apply apply_row_grp_lbl.",
+        "Reason: `label` column AETERM contains NA values. For group-level summary data, `label` and the relevant `group` values should match.",
+  sep = "\n"),
+  )
+})
+
+
+test_that("Check apply_row_grp_lbl - expect error when NA in label column", {
+
+  # create mock data
+  mock_multi_grp <- tibble::tribble(
+    ~grp1,    ~grp2,     ~ my_label,
+    "grp1_1", "grp2_1", "my_label_1",
+    "grp1_1", "grp2_1", "my_label_2",
+    "grp1_1", "grp2_2", "my_label_1",
+    "grp1_1", "grp2_2", "my_label_2",
+    "grp1_2", "grp2_1", "my_label_1",
+    "grp1_2", "grp2_1", "my_label_2",
+    "grp1_2", "grp2_2", "my_label_1",
+    "grp1_2", "grp2_2", "my_label_2",
+  ) %>%
+    mutate(
+      trtA = rep("xx (xx%)", 8),
+      trtB = rep("xx (xx%)", 8),
+      trtC = rep("xx (xx%)", 8),
+    )
+
+  mock_multi_grp$my_label <- ifelse(mock_multi_grp$my_label == "my_label_1", NA, mock_multi_grp$my_label)
+
+  sample_grp_plan <- row_grp_plan(
+    row_grp_structure(group_val = ".default", element_block(post_space =" ")),
+    label_loc = element_row_grp_loc(location = "indented")
+  )
+
+  # expect error message
+  expect_error({
+    auto_test_listcols <- apply_row_grp_lbl(mock_multi_grp, sample_grp_plan$label_loc,group = vars(grp1, grp2), label = sym("my_label"))
+  },
+  paste("`label` column my_label contains NA values. For group-level summary data, `label` and the relevant `group` values should match.")
+  )
+})
+

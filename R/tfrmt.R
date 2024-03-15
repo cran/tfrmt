@@ -197,6 +197,18 @@ tfrmt <- function(
     class = c("tfrmt")
   )
 
+  # check non-null plan parameters are supplied with plan function
+  check_plan(new_tfrmt, "body_plan")
+  check_plan(new_tfrmt, "col_plan")
+  check_plan(new_tfrmt, "col_style_plan")
+  check_plan(new_tfrmt, "row_grp_plan")
+  check_plan(new_tfrmt, "footnote_plan")
+  check_plan(new_tfrmt, "page_plan")
+
+  # check non-null big_n is supplied a big_n_structure
+  check_big_n(new_tfrmt)
+
+
   if(!missing(tfrmt_obj)){
     new_tfrmt <- layer_tfrmt(
       tfrmt_obj,
@@ -411,10 +423,14 @@ as_length_one_quo <- function(x, ...){
   UseMethod("as_length_one_quo",x)
 }
 
+#' @export
+#' @keywords internal
 as_length_one_quo.quosure <- function(x, ...){
   x
 }
 
+#' @export
+#' @keywords internal
 #' @importFrom rlang warn
 as_length_one_quo.quosures <- function(x, ..., arg = NULL){
   if(length(x) == 0){
@@ -434,6 +450,8 @@ as_length_one_quo.quosures <- function(x, ..., arg = NULL){
   }
 }
 
+#' @export
+#' @keywords internal
 as_length_one_quo.character <- function(x, ...){
   quo(!!sym(x))
 }
@@ -442,14 +460,20 @@ as_vars <-  function(x){
   UseMethod("as_vars",x)
 }
 
+#' @export
+#' @keywords internal
 as_vars.quosures <- function(x){
   x
 }
 
+#' @export
+#' @keywords internal
 as_vars.quosure <- function(x){
   vars(!!x)
 }
 
+#' @export
+#' @keywords internal
 as_vars.character <- function(x){
   do.call(vars,lapply(x,function(x){ quo(!!sym(x))}))
 }
