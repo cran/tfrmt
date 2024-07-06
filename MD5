@@ -1,6 +1,6 @@
-e1506dd5611288dacb6ab8245bfa716a *DESCRIPTION
+5752a00946e1156aeb52d8beb2aa89c9 *DESCRIPTION
 cb25929bdbc9b08fb2efcdb3cdd1c772 *NAMESPACE
-76e0dfdc40a5c32d7531cf54fbffc69c *NEWS.md
+58e19d432c3943b9e2b6a0e8f45ac7e2 *NEWS.md
 b154807ecb2eb951b619b845abf9ae9e *R/JSON.R
 f08ceb6c5895ea17b026b9b891097eeb *R/apply_col_plan.R
 be35dff7bc6331d204c07ab09a797d09 *R/apply_col_style_plan.R
@@ -10,10 +10,10 @@ c3fefd60c21beb2f1c16bc1c1a3959b4 *R/apply_frmt_methods.R
 f06cb8486d33c2bbd901d5086e6dff42 *R/apply_page_plan.R
 51f014aa49897128e7fc80c980aafcdd *R/apply_row_grp_plan.R
 40b5d4591dcdee2b88ab88a936350dca *R/apply_table_frmt_plan.R
-5fdae6d01bd280f46b2588a96786528b *R/apply_tfrmt.R
+e472a3f9bdaf5d5a23cd5c4f37688370 *R/apply_tfrmt.R
 a3b04ae917275b5d29c05a6792248123 *R/big_n.R
 9ac7c14f11c7cde981a3c066659751c1 *R/body_plan.R
-c504648a52a8ceb01679b6942ee9ba55 *R/col_plan.R
+f93e5bb78b13c8ba57b8c402ece0357c *R/col_plan.R
 9ee30e47c4b86ccd181c9764fd29972e *R/col_style_plan.R
 5cbea711ad30fdc003a5d8b86f7b22e2 *R/data.R
 c70f3decbdb2a25f282659c6f2331ee8 *R/display_insights.R
@@ -25,7 +25,7 @@ eb27d1e7723179504b5cdcf848d1df61 *R/display_row_frmts.R
 e71741a21e13d2f43ca46be21f2c3b4f *R/mock_tbl.R
 5b485b58c9c58411a2323a260ba75eab *R/page_plan.R
 9611ec729252d67b787208a58d1fe8e0 *R/print_to_ggplot.R
-1c78afa1acfcb5b05d19216696d02416 *R/print_to_gt.R
+2a8e45714e5b723cd998150a5727ad3e *R/print_to_gt.R
 e1850e642ea98c23412199dd555bb802 *R/row_group_plan.R
 cdc8eba4372b034e9251bf9ff3548334 *R/struct_utils.R
 be13681032c3e20574b712dfb1b78be6 *R/tfrmt.R
@@ -51,7 +51,7 @@ e1423f95439f9d4a40d9ce226d59710e *README.md
 20001659682f12a0fbdf7c72a4ad4189 *man/big_n_structure.Rd
 a27f8a06da2bfa52e66607e7451c5ad7 *man/body_plan.Rd
 fa8f150271c69c5d72f936b716a676e5 *man/cleaned_data_to_gt.Rd
-34818849aaac0d3c3c011da8251f8c7a *man/col_plan.Rd
+ba95baa986fb71c539832eb1310a8470 *man/col_plan.Rd
 b09bd9d6319609210b67919f7a7afcec *man/col_style_plan.Rd
 0468b66237e2069f23dbb491b18b6402 *man/data_ae.Rd
 40751eac970a51a59ecdd456be572460 *man/data_demog.Rd
