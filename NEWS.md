@@ -1,3 +1,12 @@
+# tfrmt 0.1.3
+
+Improvements
+* Incorporate contents of `col_style_plan` in the creation of mock data. 
+
+Bug fixes
+* Fixed issue where JSON conversion of `frmt_when` dropped quotes from strings
+* Avoid use of deprecated functionality in `dplyr::summarise()`
+
 # tfrmt 0.1.2
 
 Bug fixes
